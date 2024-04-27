@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Draw and Download GeoJSON</title>
+  <!-- Include Leaflet CSS and JS -->
+  <link href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" rel="stylesheet"/>
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js">
+    // Create a control for geolocation
+    var geolocateControl = L.control({position: 'topleft'});
+
+    geolocateControl.onAdd = function (map) {
+      var container = L.DomUtil.create('div', 'leaflet-bar');
+      container.innerHTML = '<img src="https://img.icons8.com/ios/50/000000/place-marker.png"/>'; // You can replace this with your own icon
+      container.onclick = function() {
+        map.locate({setView: true, maxZoom: 16});
+      }
+      return container;
+    };
+    geolocateControl.addTo(map);
+
+    // Handle location found
+    map.on('locationfound', function(e) {
+      L.marker(e.latlng).addTo(map).bindPopup("You are here!").openPopup();
+    });
+
+    // Handle location error
+    map.on('locationerror', function(e) {
+      alert(e.message);
+    });
+
+  </script>
+  <!-- Include Leaflet.draw CSS and JS -->
+  <link href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" rel="stylesheet"/>
+  <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js">
+    // Create a control for geolocation
+    var geolocateControl = L.control({position: 'topleft'});
+
+    geolocateControl.onAdd = function (map) {
+      var container = L.DomUtil.create('div', 'leaflet-bar');
+      container.innerHTML = '<img src="https://img.icons8.com/ios/50/000000/place-marker.png" alt=""/>'; // You can replace this with your own icon
+      container.onclick = function() {
+        map.locate({setView: true, maxZoom: 16});
+      }
+      return container;
+    };
+    geolocateControl.addTo(map);
+
+    // Handle location found
+    map.on('locationfound', function(e) {
+      L.marker(e.latlng).addTo(map).bindPopup("You are here!").openPopup();
+    });
+
+    // Handle location error
+    map.on('locationerror', function(e) {
+      alert(e.message);
+    });
+
+  </script>
+  <style>
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #121212;
+        color: #e0e0e0;
+      }
+
+
+
+      #map {
+        box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+      }
+
+      input[type="text"], textarea
+
+    }
+
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap');
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    #banner {
+      background-color: #333;
+      color: white;
+      padding: 10px 20px;
+      text-align: center;
+      font-weight: 500;
+      font-size: 24px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    }
+
+    #map {
+      margin-top: 20px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    }
+
+    input[type="text"], textarea, input[type="date"] {
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus,
+
+    button {
+      display: block;
+      margin-top: 20px;
+      background-color: #007BFF;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .leaflet-bar {
+      background-color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+      padding: 10px;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+    }
+    .leaflet-bar img {
+      width: 24px;
+      height: 24px;
+    }
+
+    input[type="text"],
+    .leaflet-bar {
+      background-color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+      padding: 10px;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+    }
+    .leaflet-bar img {
+      width: 24px;
+      height: 24px;
+    }
+
+    input:not([type]), input[type=text], input[type=date], textarea {
+      color: #000;
+      border-bottom: 1px solid #000;
+      box-shadow: 0 1px 0 0 #000;
+    }
+    input:not([type]):focus, input[type=text]:focus, input[type=date]:focus, textarea:focus {
+      border-bottom: 1px solid #000;
+      box-shadow: 0 1px 0 0 #000;
+    }
+  </style>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+</head>
+<body>
+<nav class="blue darken-4"><div class="nav-wrapper"><a class="brand-logo" href="#">American Viticulture Area Boundary Builder</a></div></nav>
+<div id="map" style="width: 100%; height: 500px;"></div>
+<!-- AVA attributes form -->
+<!-- AVA attributes form -->
+<form id="avaForm">
+  <label for="ava_id">AVA ID:</label>
+  <input class="validate black-text" id="ava_id" name="ava_id" placeholder="dahlonega_plateau" type="text"/><br/>
+  <label for="name">Name:</label>
+  <input class="validate black-text" id="name" name="name" placeholder="Dahlonega Plateau" type="text"/><br/>
+  <label for="aka">Also Known As:</label>
+  <input class="validate black-text" id="aka" name="aka" placeholder="Also Known As" type="text"/><br/>
+  <label for="created">Created Date:</label>
+  <input class="validate black-text" id="created" name="created" placeholder="2018-06-29" type="date"/><br/>
+  <label for="removed">Removed Date:</label>
+  <input class="validate black-text" id="removed" name="removed" placeholder="Removed Date (if any)" type="date"/><br/>
+  <label for="county">County:</label>
+  <input class="validate black-text" id="county" name="county" placeholder="Lumpkin|White" type="text"/><br/>
+  <label for="state">State:</label>
+  <input class="validate black-text" id="state" name="state" placeholder="GA" type="text"/><br/>
+  <label for="within">Within:</label>
+  <input class="validate black-text" id="within" name="within" placeholder="Within" type="text"/><br/>
+  <label for="contains">Contains:</label>
+  <input class="validate black-text" id="contains" name="contains" placeholder="Contains" type="text"/><br/>
+  <label for="petitioner">Petitioner:</label>
+  <textarea class="materialize-textarea black-text" id="petitioner" name="petitioner" placeholder="Amy Booker, President..." rows="3"></textarea><br/>
+  <label for="cfr_author">CFR Author:</label>
+  <input class="validate black-text" id="cfr_author" name="cfr_author" placeholder="Dana Register" type="text"/><br/>
+  <label for="cfr_index">CFR Index:</label>
+  <input class="validate black-text" id="cfr_index" name="cfr_index" placeholder="9.263" type="text"/><br/>
+  <label for="cfr_revision_history">CFR Revision History:</label>
+  <textarea class="materialize-textarea black-text" id="cfr_revision_history" name="cfr_revision_history" placeholder="[T.D.TTB-151, 83 FR 30538, June 29, 2018]" rows="3"></textarea><br/>
+  <label for="approved_maps">Approved Maps:</label>
+  <textarea class="materialize-textarea black-text" id="approved_maps" name="approved_maps" placeholder="(1) Dawsonville, GA, 1997; (2) Campbell Mountain, GA, 2014; ..." rows="5"></textarea><br/>
+  <label for="boundary_description">Boundary Description:</label>
+  <textarea class="materialize-textarea black-text" id="boundary_description" name="boundary_description" placeholder="(1) The beginning point..." rows="10"></textarea><br/>
+  <label for="used_maps">Used Maps:</label>
+  <textarea class="materialize-textarea black-text" id="used_maps" name="used_maps" placeholder="(1) Dawsonville, GA, 1997; (2) Campbell Mountain, GA, 2014; ..." rows="5"></textarea><br/>
+  <label for="valid_start">Valid Start Date:</label>
+  <input class="validate black-text" id="valid_start" name="valid_start" placeholder="Valid Start Date" type="date"/><br/>
+  <label for="valid_end">Valid End Date:</label>
+  <input class="validate black-text" id="valid_end" name="valid_end" placeholder="Valid End Date" type="date"/><br/>
+  <label for="lcsh">LCSH:</label>
+  <input class="validate black-text" id="lcsh" name="lcsh" placeholder="LCSH" type="text"/><br/>
+  <label for="sameas">Same As:</label>
+  <input class="validate black-text" id="sameas" name="sameas" placeholder="Same As" type="text"/><br/>
+  <button class="btn waves-effect waves-light" onclick="downloadGeoJSON()" type="button">Download GeoJSON</button>
+</form>
+<script>
+  // Initialize the map
+  var map = L.map('map').fitWorld(); // fitWorld to set view based on user's location
+
+  // Geolocate user
+  map.locate({setView: true, maxZoom: 13});
+
+  // Add OSM base layer
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+
+  // Initialize the FeatureGroup to store editable layers
+  var drawnItems = new L.FeatureGroup();
+  map.addLayer(drawnItems);
+
+  // Initialize the draw control and pass it the FeatureGroup of editable layers
+
+  var drawControl = new L.Control.Draw({
+    draw: {
+      polyline: false,
+      polygon: {},
+      circle: false,
+      marker: false,
+      circlemarker: false,
+      rectangle: false
+    },
+    edit: {
+      featureGroup: drawnItems
+    }
+  });
+
+  map.addControl(drawControl);
+
+  map.on('draw:created', function (e) {
+    var layer = e.layer;
+    drawnItems.addLayer(layer);
+  });
+
+  // Create a control for geolocation
+  var geolocateControl = L.control({position: 'topleft'});
+
+  geolocateControl.onAdd = function (map) {
+    var container = L.DomUtil.create('div', 'leaflet-bar');
+    container.innerHTML = '<img src="https://img.icons8.com/ios/50/000000/place-marker.png"/>'; // You can replace this with your own icon
+    container.onclick = function() {
+      map.locate({setView: true, maxZoom: 16});
+    }
+    return container;
+  };
+  geolocateControl.addTo(map);
+
+  // Handle location found
+  map.on('locationfound', function(e) {
+    L.marker(e.latlng).addTo(map).bindPopup("You are here!").openPopup();
+  });
+
+  // Handle location error
+  map.on('locationerror', function(e) {
+    alert(e.message);
+  });
+
+  function downloadGeoJSON() {
+    var data = drawnItems.toGeoJSON();
+    var formData = new FormData(document.getElementById('avaForm'));
+    var ava_name = formData.get('ava_id').toLowerCase().replace(/ /g, '_');
+    data.name = ava_name;
+    // Set default structure
+    data.type = "FeatureCollection";
+    data.crs = { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } };
+    // Add form data to the properties of the GeoJSON features
+    data.features.forEach(function(feature) {
+      feature.properties = {
+        "ava_id": formData.get('ava_id'),
+        "name": formData.get('name'),
+        "aka": formData.get('aka'),
+        "created": formData.get('created'),
+        "removed": formData.get('removed'),
+        "county": formData.get('county'),
+        "state": formData.get('state'),
+        "within": formData.get('within'),
+        "contains": formData.get('contains'),
+        "petitioner": formData.get('petitioner'),
+        "cfr_author": formData.get('cfr_author'),
+        "cfr_index": formData.get('cfr_index'),
+        "cfr_revision_history": formData.get('cfr_revision_history'),
+        "approved_maps": formData.get('approved_maps'),
+        "boundary_description": formData.get('boundary_description'),
+        "used_maps": formData.get('used_maps'),
+        "valid_start": formData.get('valid_start'),
+        "valid_end": formData.get('valid_end'),
+        "lcsh": formData.get('lcsh'),
+        "sameas": formData.get('sameas')
+      };
+    });
+
+    var blob = new Blob([JSON.stringify(data)], {type: "application/json"});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = ava_name + ".geojson";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+  window.addEventListener('load', function() {
+    var options = {
+      bottom: '64px',
+      right: 'unset',
+      left: '32px',
+      time: '0.5s',
+      mixColor: '#fff',
+      backgroundColor: '#ffffff',
+      buttonColorDark: '#100f2c',
+      buttonColorLight: '#fff',
+      saveInCookies: true,
+      label: '🌓',
+      autoMatchOsTheme: true
+    }
+    const darkmode = new Darkmode(options);
+    darkmode.showWidget();
+  });
+</script>
+
+</body>
+</html>

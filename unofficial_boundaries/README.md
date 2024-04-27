@@ -2,3 +2,4 @@ The files in this folder are related to the official boundaries that we would li
 
 Files:
 * **mendocino_ridge_outside_boundary.geojson**: This is the boundary described in the official document inside which areas above the 1200 foot contour line are included.
+* **hickory_sands_district.geojson**: This is the boundary described in the proposal for the Hickory Sands District AVA.

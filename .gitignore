@@ -17,3 +17,5 @@ docs/.jekyll-metadata
 
 # QGIS files
 .tmp
+/renv/
+/.idea/
